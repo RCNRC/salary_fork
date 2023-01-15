@@ -71,18 +71,24 @@ def get_hh_salaries_statistics(languages):
 
 
 def predict_hh_avarage_salary(language="Python"):
-    response = get_hh_vacancies_page(language=language).json()
-    pages_count = int(response["pages"])
-    vacancies_count = int(response["found"])
     all_salaries_sum = 0
     vacancies_processed_count = 0
-    for page in range(pages_count):
-        vacancies = get_hh_vacancies_page(language=language, page=page).json()["items"]
+    current_page_number = 0
+    more_pages_ahead = True
+    while(more_pages_ahead):
+        response = get_hh_vacancies_page(language=language, page=current_page_number).json()
+        vacancies = response["items"]
+        if(current_page_number==0):
+            pages_count = int(response["pages"])
+            vacancies_count = int(response["found"])
         for vacancy in vacancies:
             prediction = predict_hh_rub_salary(vacancy=vacancy)
             if prediction:
                 all_salaries_sum += prediction
                 vacancies_processed_count += 1
+        if(current_page_number==pages_count-1):
+            more_pages_ahead = False
+        current_page_number += 1
     return [f"{language}", f"{vacancies_count}", f"{vacancies_processed_count}", f"{int(all_salaries_sum / vacancies_processed_count)}"]
 
 
@@ -106,6 +112,7 @@ def get_hh_vacancies_page(language="Python", last_month=False, page=0):
         "area": f"{rest_api_moscow_id}",
         "only_with_salary": "true",
         "page": page,
+        "per_page": "100",
         }
     if last_month:
         params["period"] = "30"
