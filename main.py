@@ -6,6 +6,15 @@ from terminaltables import AsciiTable
 MOST_POPULAR_LANGUAGES = ["JavaScript", "Java", "Python", "Ruby", "PHP", "C++", "C#", "C", "Go", "Shell", "Objective-C", "Scala", "Swift", "TypeScript"]
 
 
+def predict_salary_fork(salary_from, salary_to):
+    if(not salary_from):
+        return salary_to * 0.8
+    elif(not salary_to):
+        return salary_from * 1.2
+    else:
+        return (salary_from + salary_to) / 2
+
+
 def get_sj_salaries_statistics(token, languages):
     sj_vacancies = [["Язык программирования", "Вакансий найдено", "Вакансий обработано", "Средняя зарплата"]]
     for language in languages:
@@ -34,11 +43,7 @@ def predict_sj_avarage_salary(token, language="Python"):
 def predict_sj_rub_salary(vacancy):
     if(vacancy["currency"] != "rub" or (vacancy["payment_from"] == 0 and vacancy["payment_to"] == 0)):
         return None
-    if(vacancy["payment_from"] == 0):
-        return vacancy["payment_to"] * 0.8
-    if(vacancy["payment_to"] == 0):
-        return vacancy["payment_from"] * 1.2
-    return (vacancy["payment_from"] + vacancy["payment_to"]) / 2
+    return predict_salary_fork(vacancy["payment_from"], vacancy["payment_to"])
 
 
 def get_sj_vacancies_page(token, language="Python", page=0):
@@ -96,11 +101,7 @@ def predict_hh_rub_salary(vacancy):
     vacancy_salary = vacancy["salary"]
     if(vacancy_salary["currency"] != "RUR"):
         return None
-    if(vacancy_salary["from"] is None):
-        return vacancy_salary["to"] * 0.8
-    if(vacancy_salary["to"] is None):
-        return vacancy_salary["from"] * 1.2
-    return (vacancy_salary["from"] + vacancy_salary["to"]) / 2
+    return predict_salary_fork(vacancy_salary["from"], vacancy_salary["to"])
 
 
 def get_hh_vacancies_page(language="Python", last_month=False, page=0):
