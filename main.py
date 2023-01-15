@@ -44,12 +44,13 @@ def predict_sj_rub_salary(vacancy):
 def get_sj_vacancies_page(token, language="Python", page=0):
     base_url = "https://api.superjob.ru/2.0/"
     rest_api = "vacancies/"
+    where_search_keyword = {"position": 1}
     params = {
-        "town": "4",
-        "keywords[0][srws]": "1",
+        "town": "Москва",
+        "keywords[0][srws]": f"{where_search_keyword['position']}",
         "keywords[0][skwc]": "or",
         "keywords[0][keys]": "программист",
-        "keywords[1][srws]": "1",
+        "keywords[1][srws]": f"{where_search_keyword['position']}",
         "keywords[1][skwc]": "or",
         "keywords[1][keys]": f"{language}",
         "page": page,
@@ -99,9 +100,10 @@ def predict_hh_rub_salary(vacancy):
 def get_hh_vacancies_page(language="Python", last_month=False, page=0):
     base_url = "https://api.hh.ru/"
     rest_api = "vacancies"
+    rest_api_moscow_id = 1
     params = {
         "text": f"{language}",
-        "area": "1",
+        "area": f"{rest_api_moscow_id}",
         "only_with_salary": "true",
         "page": page,
         }
