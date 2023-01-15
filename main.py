@@ -63,10 +63,10 @@ def get_sj_vacancies_page(token, language="Python", page=0):
 
 
 def get_hh_salaries_statistics(languages):
-    hh_vacancies = [["Язык программирования", "Вакансий найдено", "Вакансий обработано", "Средняя зарплата"]]
+    hh_statistics = [["Язык программирования", "Вакансий найдено", "Вакансий обработано", "Средняя зарплата"]]
     for language in languages:
-        hh_vacancies.append(predict_hh_avarage_salary(language=language))
-    return AsciiTable(hh_vacancies, "HH Moscow")
+        hh_statistics.append(predict_hh_avarage_salary(language=language))
+    return AsciiTable(hh_statistics, "HH Moscow")
 
 
 def predict_hh_avarage_salary(language="Python"):
