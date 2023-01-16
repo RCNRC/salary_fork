@@ -37,12 +37,12 @@ def predict_sj_avarage_salary(token, language="Python"):
                 vacancies_processed_count += 1
         pages_count += 1
         is_more = response["more"]
-    avarage_salary = int(all_salaries_sum / vacancies_processed_count) if vacancies_processed_count > 0 else 0
+    avarage_salary = int(all_salaries_sum / vacancies_processed_count) if vacancies_processed_count else 0
     return [f"{language}", f"{response['total']}", f"{vacancies_processed_count}", f"{avarage_salary}"]
 
 
 def predict_sj_rub_salary(vacancy):
-    if(vacancy["currency"] != "rub" or (vacancy["payment_from"] == 0 and vacancy["payment_to"] == 0)):
+    if(vacancy["currency"] != "rub" or (not vacancy["payment_from"] and not vacancy["payment_to"])):
         return None
     return predict_salary_fork(vacancy["payment_from"], vacancy["payment_to"])
 
@@ -95,7 +95,7 @@ def predict_hh_avarage_salary(language="Python"):
         if(current_page_number==pages_count-1):
             more_pages_ahead = False
         current_page_number += 1
-    avarage_salary = int(all_salaries_sum / vacancies_processed_count) if vacancies_processed_count > 0 else 0
+    avarage_salary = int(all_salaries_sum / vacancies_processed_count) if vacancies_processed_count else 0
     return [f"{language}", f"{vacancies_count}", f"{vacancies_processed_count}", f"{avarage_salary}"]
 
 
